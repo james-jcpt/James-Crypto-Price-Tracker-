@@ -47,21 +47,24 @@
   <!-- JS -->
   <script src="script.js"></script>
 
-  <!-- FIREBASE SDK (ready for later integration) -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <!-- FIREBASE SDK (browser version for GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
 
   <script>
-    // Firebase configuration (replace with your own later)
+    // Your Firebase configuration
     const firebaseConfig = {
-      apiKey: "YOUR_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID"
+      apiKey: "AIzaSyDB9PEN93M3zsGl05NRbtnBOuboftoFLK0",
+      authDomain: "jamescryptotracker-6e5ae.firebaseapp.com",
+      projectId: "jamescryptotracker-6e5ae",
+      storageBucket: "jamescryptotracker-6e5ae.firebasestorage.app",
+      messagingSenderId: "687956582794",
+      appId: "1:687956582794:web:eea3476e2af1ee46dea873"
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.analytics();
   </script>
 </body>
 </html>
