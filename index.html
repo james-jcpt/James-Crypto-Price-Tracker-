@@ -23,7 +23,6 @@
 
   <!-- MAIN APP -->
   <main>
-    <!-- Example crypto display -->
     <section id="crypto-prices">
       <h2>Live Prices</h2>
       <div id="coins">
@@ -31,7 +30,6 @@
       </div>
     </section>
 
-    <!-- VIP / Payment Section -->
     <section id="vip">
       <h2>VIP Features</h2>
       <button id="vip-btn">Upgrade to VIP</button>
@@ -47,7 +45,7 @@
   <!-- JS -->
   <script src="script.js"></script>
 
-  <!-- FIREBASE SDK (browser version for GitHub Pages) -->
+  <!-- FIREBASE SDK (browser version) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
 
@@ -65,29 +63,28 @@
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const analytics = firebase.analytics();
+
+    // MOBILE-FRIENDLY FIREBASE CONNECTION TEST
+    const statusDiv = document.createElement('div');
+    statusDiv.id = 'firebase-status';
+    statusDiv.style.position = 'fixed';
+    statusDiv.style.bottom = '10px';
+    statusDiv.style.left = '10px';
+    statusDiv.style.padding = '5px 10px';
+    statusDiv.style.backgroundColor = '#4caf50';
+    statusDiv.style.color = 'white';
+    statusDiv.style.fontWeight = 'bold';
+    statusDiv.style.borderRadius = '5px';
+    statusDiv.style.zIndex = '1000';
+
+    if (firebase.apps.length) {
+      statusDiv.innerText = 'Firebase is connected ✅';
+    } else {
+      statusDiv.innerText = 'Firebase is NOT connected ❌';
+      statusDiv.style.backgroundColor = '#f44336';
+    }
+
+    document.body.appendChild(statusDiv);
   </script>
 </body>
-</html>
-<script>
-  // Create a small div to show Firebase status
-  const statusDiv = document.createElement('div');
-  statusDiv.id = 'firebase-status';
-  statusDiv.style.position = 'fixed';
-  statusDiv.style.bottom = '10px';
-  statusDiv.style.left = '10px';
-  statusDiv.style.padding = '5px 10px';
-  statusDiv.style.backgroundColor = '#4caf50';
-  statusDiv.style.color = 'white';
-  statusDiv.style.fontWeight = 'bold';
-  statusDiv.style.borderRadius = '5px';
-  statusDiv.style.zIndex = '1000';
-
-  if (firebase.apps.length) {
-    statusDiv.innerText = 'Firebase is connected ✅';
-  } else {
-    statusDiv.innerText = 'Firebase is NOT connected ❌';
-    statusDiv.style.backgroundColor = '#f44336';
-  }
-
-  document.body.appendChild(statusDiv);
-</script>
+                                                                                         </html>
