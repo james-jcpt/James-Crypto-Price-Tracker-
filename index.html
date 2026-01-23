@@ -146,5 +146,74 @@
   #vip-pay-btn, #generate-btn { display:block; padding:10px 20px; margin:15px auto; font-size:16px; font-weight:bold; background-color:#4caf50; color:white; border:none; border-radius:5px; cursor:pointer; }
   #vip-pay-btn:hover, #generate-btn:hover { background-color:#45a049; }
 </style>
+  <!-- ===== VIP CHARTS ===== -->
+<!-- Add this inside your VIP section or below it -->
+<canvas id="vipChart" width="400" height="200" style="display:none;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let chartInitialized = false;
+  let vipChart;
+  let chartLabels = [];
+  let chartData = [];
+
+  async function updateVIPChart() {
+    try {
+      const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1&sparkline=false");
+      const data = await response.json();
+
+      if(isVIP){
+        document.getElementById("vipChart").style.display = 'block';
+        const prices = data.map(c => c.current_price);
+        const names = data.map(c => c.symbol.toUpperCase());
+
+        chartLabels = names;
+        chartData = prices;
+
+        if(!chartInitialized){
+          vipChart = new Chart(document.getElementById('vipChart').getContext('2d'), {
+            type: 'bar', // can change to line if you want
+            data: {
+              labels: chartLabels,
+              datasets: [{
+                label: 'VIP Crypto Prices (USD)',
+                data: chartData,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              animation: {
+                duration: 500
+              },
+              scales: {
+                y: {
+                  beginAtZero: false
+                }
+              }
+            }
+          });
+          chartInitialized = true;
+        } else {
+          vipChart.data.labels = chartLabels;
+          vipChart.data.datasets[0].data = chartData;
+          vipChart.update();
+        }
+      }
+    } catch(err){
+      console.error("Error updating VIP chart:", err);
+    }
+  }
+
+  // Fetch and update VIP chart every 10s
+  setInterval(() => {
+    if(isVIP) updateVIPChart();
+  }, 10000);
+
+  // Initial chart update
+  updateVIPChart();
+</script>
 </body>
                                                                                          </html>
