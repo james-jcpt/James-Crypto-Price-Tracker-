@@ -86,5 +86,64 @@
 
     document.body.appendChild(statusDiv);
   </script>
+  <!-- VIP + Feature Generator Section -->
+<section id="vip-upgrade">
+  <div class="vip-upgrade-container">
+    <button id="vip-pay-btn">Upgrade to VIP</button>
+    <div id="feature-generator" style="display:none; margin-top:15px;">
+      <button id="generate-btn">Generate Feature</button>
+      <div id="feature-output" style="margin-top:10px; padding:10px; background:#fff; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+        Your generated feature will appear here.
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // VIP Status (simulated; later can connect to Firebase)
+  let isVIP = false;
+
+  // Payment button
+  const vipPayBtn = document.getElementById('vip-pay-btn');
+  const featureGeneratorDiv = document.getElementById('feature-generator');
+  const generateBtn = document.getElementById('generate-btn');
+  const featureOutput = document.getElementById('feature-output');
+
+  vipPayBtn.addEventListener('click', () => {
+    // Open Flutterwave payment link
+    window.open("https://flutterwave.com/pay/1inayqx1l3a3", "_blank");
+    
+    // Simulate VIP unlock for now
+    isVIP = true;
+    featureGeneratorDiv.style.display = 'block';
+    vipPayBtn.style.display = 'none';
+  });
+
+  // Feature Generator button
+  const cryptoFeatures = [
+    "BTC may rise 1.5% today.",
+    "Top coin to watch: ETH.",
+    "Next 24h trend: ALTCOINS performing stronger than BTC.",
+    "SOL showing bullish momentum in last 12h.",
+    "ADA trend indicates potential growth in the next 24h."
+  ];
+
+  generateBtn.addEventListener('click', () => {
+    if(isVIP){
+      const randomIndex = Math.floor(Math.random() * cryptoFeatures.length);
+      featureOutput.innerText = cryptoFeatures[randomIndex];
+    } else {
+      featureOutput.innerText = "You must be VIP to generate features!";
+    }
+  });
+</script>
+
+<style>
+  /* VIP + Feature Generator styling */
+  #vip-upgrade { text-align:center; margin:30px 0; }
+  .vip-upgrade-container { display:inline-block; padding:20px; border:2px solid #4caf50; border-radius:10px; background-color:#f0f0f0; }
+  #vip-pay-btn, #generate-btn { display:block; padding:10px 20px; margin:15px auto; font-size:16px; font-weight:bold; background-color:#4caf50; color:white; border:none; border-radius:5px; cursor:pointer; }
+  #vip-pay-btn:hover, #generate-btn:hover { background-color:#45a049; }
+</style>
 </body>
                                                                                          </html>
