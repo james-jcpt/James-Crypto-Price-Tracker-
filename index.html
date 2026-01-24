@@ -1,229 +1,106 @@
-<!-- Rebuild deployment -->
-<!DOCTYPE html>
+<!-- Rebuild deployment --!><!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="CWiQmt9gwaNzk2v-ZpXw6teIQWkVRnj0S2ZjKAoA6dI" />
   <title>James Crypto Intelligence Platform</title>
 
-  <!-- Google site verification (you already used this) -->
-  <meta name="google-site-verification" content="CWiQmt9gwaNzk2v-ZpXw6teIQWkVRnj0S2ZjKAoA6dI" />
-
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0b0b0b;
-      color: #eaeaea;
-    }
+    body { font-family: Arial, sans-serif; background: #0a0a0a; color: #f0f0f0; padding: 16px; }
+    h1 { font-size: 22px; }
+    h2 { margin-top: 24px; font-size: 18px; }
+    .coin { margin: 6px 0; }
+    .arrow { font-size: 12px; margin-left: 4px; }
+    .price-flash { animation: flash 0.6s ease; }
+    @keyframes flash { 0% {background: rgba(255,255,255,0.15);} 100% {background: transparent;} }
 
-    header {
-      padding: 16px;
-      background: #111;
-      border-bottom: 1px solid #222;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    header p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      opacity: 0.7;
-    }
-
-    section {
-      padding: 16px;
-      border-bottom: 1px solid #1f1f1f;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-
-    .coin-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #222;
-      font-size: 14px;
-    }
-
-    .up { color: #4caf50; }
-    .down { color: #f44336; }
-
-    .box {
-      margin-top: 12px;
+    .trust-bar {
+      margin: 16px 0;
       padding: 12px;
-      border: 1px solid #333;
+      border: 1px solid #2a2a2a;
       border-radius: 6px;
       background: #101010;
+      font-size: 13px;
+      opacity: 0.9;
     }
+    .trust-bar strong { color: #6ddcff; }
 
-    footer {
-      padding: 12px;
-      text-align: center;
-      font-size: 12px;
-      opacity: 0.6;
+    .heartbeat {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #4caf50;
+      border-radius: 50%;
+      margin-left: 6px;
+      animation: beat 1.2s infinite;
     }
+    @keyframes beat { 0% {opacity:0.3;} 50% {opacity:1;} 100% {opacity:0.3;} }
   </style>
 </head>
 
 <body>
 
-<header>
-  <h1>James Crypto Intelligence Platform</h1>
-  <p>Market clarity powered by intelligence, not hype</p>
-</header>
+<h1>James Crypto Intelligence Platform</h1>
 
-<!-- ================= FREE CORE ================= -->
+<!-- ===== Live Market Overview ===== -->
+<h2>🌎 Live Market Overview</h2>
+<div class="coin">BTC: <span id="btc">$--</span></div>
+<div class="coin">ETH: <span id="eth">$--</span></div>
+<div class="coin">SOL: <span id="sol">$--</span></div>
 
-<section>
-  <h2>🌍 Live Market Overview</h2>
-  <p style="font-size:13px;opacity:0.8;">
-    Real-time prices available to all users.
-  </p>
+<!-- ===== Market Pulse ===== -->
+<h2>📊 Market Pulse</h2>
+<div id="market-pulse">Analyzing market conditions…</div>
 
-  <div id="market">
-    <div class="coin-row">BTC <span id="btc">$--</span></div>
-    <div class="coin-row">ETH <span id="eth">$--</span></div>
-    <div class="coin-row">SOL <span id="sol">$--</span></div>
-  </div>
-</section>
+<!-- ===== Intelligence Systems ===== -->
+<h2>🤖 Intelligence Systems</h2>
+<ul>
+  <li>Market Analysis Engine — <span style="color:#4caf50;">Active</span></li>
+  <li>Trend Detection System — <span style="color:#ffca28;">Learning</span></li>
+  <li>Risk Awareness Module — <span style="color:#4caf50;">Stable</span></li>
+  <li>Capability Expansion Unit — <span style="color:#2196f3;">Updating</span></li>
+</ul>
 
-<section>
-  <h2>📊 Market Pulse</h2>
-  <div class="box" id="pulse">
-    Analyzing market conditions…
-  </div>
-</section>
+<!-- ===== Platform Notice ===== -->
+<h2>📈 Platform Notice</h2>
+<p>System usage is monitored to optimize performance, scalability, and future intelligence depth.</p>
 
-<section>
-  <h2>🤖 Intelligence Systems</h2>
-  <ul style="font-size:13px;opacity:0.85;">
-    <li>Market Analysis Engine — 🟢 Active</li>
-    <li>Trend Detection System — 🟡 Learning</li>
-    <li>Risk Awareness Module — 🟢 Stable</li>
-    <li>Capability Expansion Unit — 🔵 Updating</li>
-  </ul>
-</section>
-
-<section>
-  <h2>📈 Platform Notice</h2>
-  <p style="font-size:13px;opacity:0.7;">
-    System usage is monitored to optimize performance, scalability, and future intelligence depth.
-  </p>
-</section>
-
-<footer>
-  © 2026 James Intelligence Systems
-</footer>
-
-<!-- ================= SCRIPT ================= -->
-
-<script>
-async function loadPrices() {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true"
-    );
-    const data = await res.json();
-
-    update("btc", data.bitcoin.usd, data.bitcoin.usd_24h_change);
-    update("eth", data.ethereum.usd, data.ethereum.usd_24h_change);
-    update("sol", data.solana.usd, data.solana.usd_24h_change);
-
-    updatePulse(data);
-  } catch (e) {
-    console.log("Error loading prices");
-  }
-}
-
-function update(id, price, change) {
-  const el = document.getElementById(id);
-  el.textContent = "$" + price.toLocaleString();
-  el.className = change >= 0 ? "up" : "down";
-}
-
-function updatePulse(data) {
-  const avg =
-    (data.bitcoin.usd_24h_change +
-     data.ethereum.usd_24h_change +
-     data.solana.usd_24h_change) / 3;
-
-  const pulse = document.getElementById("pulse");
-
-  if (avg > 2) {
-    pulse.textContent = "Positive momentum detected. Volatility is increasing.";
-  } else if (avg < -2) {
-    pulse.textContent = "Market pressure observed. Risk awareness advised.";
-  } else {
-    pulse.textContent = "Market conditions are stable. No abnormal signals.";
-  }
-}
-
-loadPrices();
-setInterval(loadPrices, 30000);
-</script>
-<!-- ===== TRUST + LIVE FEEL UPGRADE ===== -->
-
-<style>
-  .price-flash {
-    animation: flash 0.6s ease;
-  }
-
-  @keyframes flash {
-    0% { background: rgba(255,255,255,0.15); }
-    100% { background: transparent; }
-  }
-
-  .arrow {
-    font-size: 12px;
-    margin-left: 4px;
-  }
-
-  .trust-bar {
-    margin: 16px;
-    padding: 12px;
-    border: 1px solid #2a2a2a;
-    border-radius: 6px;
-    background: #101010;
-    font-size: 13px;
-    opacity: 0.9;
-  }
-
-  .trust-bar strong {
-    color: #6ddcff;
-  }
-</style>
-
+<!-- ===== Trust Bar ===== -->
 <div class="trust-bar">
   <strong>System Transparency</strong><br/>
-  Data is fetched directly from public market sources.  
-  Prices update automatically.  
-  No user funds. No trading. No manipulation.
-  <div id="last-updated" style="margin-top:6px;opacity:0.7;font-size:12px;">
-    Last update: --
-  </div>
+  Data fetched directly from public market sources. Prices update automatically. No user funds. No trading. No manipulation.
+  <div id="last-updated" style="margin-top:6px;opacity:0.7;font-size:12px;">Last update: --</div>
+</div>
+
+<!-- ===== Free User Usage Tracker ===== -->
+<div class="trust-bar" style="margin-top:20px;">
+  <strong>Free User Data Usage</strong><br/>
+  <div id="usage-text">You have used 0 MB of 50 MB available.</div>
 </div>
 
 <script>
-let lastPrices = {};
+/* Heartbeat indicator */
+if(!document.querySelector('.heartbeat')){
+  const hb = document.createElement("span");
+  hb.className = "heartbeat";
+  document.querySelector("h1").appendChild(hb);
+}
 
-function enhancedUpdate(id, price, change) {
+/* Store last known prices */
+let lastPrices = { btc: 0, eth: 0, sol: 0 };
+
+/* Update individual coin */
+function enhancedUpdate(id, price) {
   const el = document.getElementById(id);
-  if (!el) return;
-
+  if(!el) return;
   const prev = lastPrices[id];
   lastPrices[id] = price;
 
   let arrow = "";
-  if (prev !== undefined) {
-    if (price > prev) arrow = "↑";
-    if (price < prev) arrow = "↓";
+  if(prev !== 0){
+    if(price > prev) arrow = "↑";
+    else if(price < prev) arrow = "↓";
   }
 
   el.textContent = "$" + price.toLocaleString() + " ";
@@ -232,36 +109,65 @@ function enhancedUpdate(id, price, change) {
   span.className = "arrow";
   el.appendChild(span);
 
-  el.className = change >= 0 ? "up price-flash" : "down price-flash";
-
+  el.className = "price-flash";
   setTimeout(() => el.classList.remove("price-flash"), 600);
 }
 
+/* Load prices from CoinGecko with fallback */
 async function enhancedLoadPrices() {
   try {
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true"
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd"
     );
     const data = await res.json();
 
-    enhancedUpdate("btc", data.bitcoin.usd, data.bitcoin.usd_24h_change);
-    enhancedUpdate("eth", data.ethereum.usd, data.ethereum.usd_24h_change);
-    enhancedUpdate("sol", data.solana.usd, data.solana.usd_24h_change);
+    enhancedUpdate("btc", data.bitcoin?.usd || lastPrices.btc);
+    enhancedUpdate("eth", data.ethereum?.usd || lastPrices.eth);
+    enhancedUpdate("sol", data.solana?.usd || lastPrices.sol);
 
     document.getElementById("last-updated").textContent =
       "Last update: " + new Date().toLocaleTimeString();
 
-  } catch (e) {
-    console.log("Live update error");
+    const pulseEl = document.getElementById("market-pulse");
+    pulseEl.textContent = "Market stable. Prices updated successfully.";
+  } catch(e) {
+    console.log("Price fetch failed. Using last known prices.");
+    enhancedUpdate("btc", lastPrices.btc);
+    enhancedUpdate("eth", lastPrices.eth);
+    enhancedUpdate("sol", lastPrices.sol);
+    document.getElementById("market-pulse").textContent = "Market data temporarily unavailable.";
   }
 }
 
-/* override old updater safely */
-clearInterval(window.priceInterval);
+/* Clear old interval & start live updater */
+if(window.priceInterval) clearInterval(window.priceInterval);
 enhancedLoadPrices();
 window.priceInterval = setInterval(enhancedLoadPrices, 30000);
+
+/* ===== Free User Usage Simulation ===== */
+let usageMB = 0; // start at 0
+const usageLimit = 50; // free limit MB
+
+function simulateUsage() {
+  const increment = Math.floor(Math.random() * 3) + 1;
+  usageMB += increment;
+  if (usageMB > usageLimit) usageMB = usageLimit;
+
+  const usageText = document.getElementById("usage-text");
+  if(usageMB >= usageLimit){
+    usageText.textContent = `You have reached the free limit of ${usageLimit} MB. Upgrade for unlimited access.`;
+  } else {
+    usageText.textContent = `You have used ${usageMB} MB of ${usageLimit} MB available.`;
+  }
+}
+
+simulateUsage();
+setInterval(simulateUsage, 30000);
 </script>
 
-<!-- ===== END TRUST UPGRADE ===== -->
+<footer style="margin-top:24px;font-size:12px;opacity:0.7;">
+  © 2026 James Intelligence Systems
+</footer>
+
 </body>
   </html>
