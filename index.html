@@ -2,218 +2,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- GOOGLE SITE VERIFICATION -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>James Crypto Intelligence Platform</title>
+
+  <!-- Google site verification (you already used this) -->
   <meta name="google-site-verification" content="CWiQmt9gwaNzk2v-ZpXw6teIQWkVRnj0S2ZjKAoA6dI" />
 
-  <title>James Crypto Price Tracker</title>
-  <meta name="description" content="Real-time crypto price tracker with VIP rewards, charts, data usage tracking, and premium features.">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <!-- HEADER -->
-  <header>
-    <h1>James Crypto Price Tracker</h1>
-    <p>Real-time crypto prices, VIP features, and premium tools.</p>
-  </header>
-
-  <!-- MAIN APP -->
-  <main>
-    <section id="crypto-prices">
-      <h2>Live Prices</h2>
-      <div id="coins">
-        <!-- Coins data will be loaded here via JS -->
-      </div>
-    </section>
-
-    <section id="vip">
-      <h2>VIP Features</h2>
-      <button id="vip-btn">Upgrade to VIP</button>
-      <p>Unlock advanced charts, feature generator, and more.</p>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>&copy; 2026 James Crypto Price Tracker. All rights reserved.</p>
-  </footer>
-
-  <!-- JS -->
-  <script src="script.js"></script>
-
-  <!-- FIREBASE SDK (browser version) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
-
-  <script>
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDB9PEN93M3zsGl05NRbtnBOuboftoFLK0",
-      authDomain: "jamescryptotracker-6e5ae.firebaseapp.com",
-      projectId: "jamescryptotracker-6e5ae",
-      storageBucket: "jamescryptotracker-6e5ae.firebasestorage.app",
-      messagingSenderId: "687956582794",
-      appId: "1:687956582794:web:eea3476e2af1ee46dea873"
-    };
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const analytics = firebase.analytics();
-
-    // MOBILE-FRIENDLY FIREBASE CONNECTION TEST
-    const statusDiv = document.createElement('div');
-    statusDiv.id = 'firebase-status';
-    statusDiv.style.position = 'fixed';
-    statusDiv.style.bottom = '10px';
-    statusDiv.style.left = '10px';
-    statusDiv.style.padding = '5px 10px';
-    statusDiv.style.backgroundColor = '#4caf50';
-    statusDiv.style.color = 'white';
-    statusDiv.style.fontWeight = 'bold';
-    statusDiv.style.borderRadius = '5px';
-    statusDiv.style.zIndex = '1000';
-
-    if (firebase.apps.length) {
-      statusDiv.innerText = 'Firebase is connected ✅';
-    } else {
-      statusDiv.innerText = 'Firebase is NOT connected ❌';
-      statusDiv.style.backgroundColor = '#f44336';
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: #eaeaea;
     }
 
-    document.body.appendChild(statusDiv);
-  </script>
-  <!-- VIP + Feature Generator Section -->
-<section id="vip-upgrade">
-  <div class="vip-upgrade-container">
-    <button id="vip-pay-btn">Upgrade to VIP</button>
-    <div id="feature-generator" style="display:none; margin-top:15px;">
-      <button id="generate-btn">Generate Feature</button>
-      <div id="feature-output" style="margin-top:10px; padding:10px; background:#fff; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-        Your generated feature will appear here.
-      </div>
-    </div>
+    header {
+      padding: 16px;
+      background: #111;
+      border-bottom: 1px solid #222;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    header p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    section {
+      padding: 16px;
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .coin-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #222;
+      font-size: 14px;
+    }
+
+    .up { color: #4caf50; }
+    .down { color: #f44336; }
+
+    .box {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #101010;
+    }
+
+    footer {
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>James Crypto Intelligence Platform</h1>
+  <p>Market clarity powered by intelligence, not hype</p>
+</header>
+
+<!-- ================= FREE CORE ================= -->
+
+<section>
+  <h2>🌍 Live Market Overview</h2>
+  <p style="font-size:13px;opacity:0.8;">
+    Real-time prices available to all users.
+  </p>
+
+  <div id="market">
+    <div class="coin-row">BTC <span id="btc">$--</span></div>
+    <div class="coin-row">ETH <span id="eth">$--</span></div>
+    <div class="coin-row">SOL <span id="sol">$--</span></div>
   </div>
 </section>
 
+<section>
+  <h2>📊 Market Pulse</h2>
+  <div class="box" id="pulse">
+    Analyzing market conditions…
+  </div>
+</section>
+
+<section>
+  <h2>🤖 Intelligence Systems</h2>
+  <ul style="font-size:13px;opacity:0.85;">
+    <li>Market Analysis Engine — 🟢 Active</li>
+    <li>Trend Detection System — 🟡 Learning</li>
+    <li>Risk Awareness Module — 🟢 Stable</li>
+    <li>Capability Expansion Unit — 🔵 Updating</li>
+  </ul>
+</section>
+
+<section>
+  <h2>📈 Platform Notice</h2>
+  <p style="font-size:13px;opacity:0.7;">
+    System usage is monitored to optimize performance, scalability, and future intelligence depth.
+  </p>
+</section>
+
+<footer>
+  © 2026 James Intelligence Systems
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+
 <script>
-  // VIP Status (simulated; later can connect to Firebase)
-  let isVIP = false;
+async function loadPrices() {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true"
+    );
+    const data = await res.json();
 
-  // Payment button
-  const vipPayBtn = document.getElementById('vip-pay-btn');
-  const featureGeneratorDiv = document.getElementById('feature-generator');
-  const generateBtn = document.getElementById('generate-btn');
-  const featureOutput = document.getElementById('feature-output');
+    update("btc", data.bitcoin.usd, data.bitcoin.usd_24h_change);
+    update("eth", data.ethereum.usd, data.ethereum.usd_24h_change);
+    update("sol", data.solana.usd, data.solana.usd_24h_change);
 
-  vipPayBtn.addEventListener('click', () => {
-    // Open Flutterwave payment link
-    window.open("https://flutterwave.com/pay/1inayqx1l3a3", "_blank");
-    
-    // Simulate VIP unlock for now
-    isVIP = true;
-    featureGeneratorDiv.style.display = 'block';
-    vipPayBtn.style.display = 'none';
-  });
-
-  // Feature Generator button
-  const cryptoFeatures = [
-    "BTC may rise 1.5% today.",
-    "Top coin to watch: ETH.",
-    "Next 24h trend: ALTCOINS performing stronger than BTC.",
-    "SOL showing bullish momentum in last 12h.",
-    "ADA trend indicates potential growth in the next 24h."
-  ];
-
-  generateBtn.addEventListener('click', () => {
-    if(isVIP){
-      const randomIndex = Math.floor(Math.random() * cryptoFeatures.length);
-      featureOutput.innerText = cryptoFeatures[randomIndex];
-    } else {
-      featureOutput.innerText = "You must be VIP to generate features!";
-    }
-  });
-</script>
-
-<style>
-  /* VIP + Feature Generator styling */
-  #vip-upgrade { text-align:center; margin:30px 0; }
-  .vip-upgrade-container { display:inline-block; padding:20px; border:2px solid #4caf50; border-radius:10px; background-color:#f0f0f0; }
-  #vip-pay-btn, #generate-btn { display:block; padding:10px 20px; margin:15px auto; font-size:16px; font-weight:bold; background-color:#4caf50; color:white; border:none; border-radius:5px; cursor:pointer; }
-  #vip-pay-btn:hover, #generate-btn:hover { background-color:#45a049; }
-</style>
-  <!-- ===== VIP CHARTS ===== -->
-<!-- Add this inside your VIP section or below it -->
-<canvas id="vipChart" width="400" height="200" style="display:none;"></canvas>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  let chartInitialized = false;
-  let vipChart;
-  let chartLabels = [];
-  let chartData = [];
-
-  async function updateVIPChart() {
-    try {
-      const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1&sparkline=false");
-      const data = await response.json();
-
-      if(isVIP){
-        document.getElementById("vipChart").style.display = 'block';
-        const prices = data.map(c => c.current_price);
-        const names = data.map(c => c.symbol.toUpperCase());
-
-        chartLabels = names;
-        chartData = prices;
-
-        if(!chartInitialized){
-          vipChart = new Chart(document.getElementById('vipChart').getContext('2d'), {
-            type: 'bar', // can change to line if you want
-            data: {
-              labels: chartLabels,
-              datasets: [{
-                label: 'VIP Crypto Prices (USD)',
-                data: chartData,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-              }]
-            },
-            options: {
-              responsive: true,
-              animation: {
-                duration: 500
-              },
-              scales: {
-                y: {
-                  beginAtZero: false
-                }
-              }
-            }
-          });
-          chartInitialized = true;
-        } else {
-          vipChart.data.labels = chartLabels;
-          vipChart.data.datasets[0].data = chartData;
-          vipChart.update();
-        }
-      }
-    } catch(err){
-      console.error("Error updating VIP chart:", err);
-    }
+    updatePulse(data);
+  } catch (e) {
+    console.log("Error loading prices");
   }
+}
 
-  // Fetch and update VIP chart every 10s
-  setInterval(() => {
-    if(isVIP) updateVIPChart();
-  }, 10000);
+function update(id, price, change) {
+  const el = document.getElementById(id);
+  el.textContent = "$" + price.toLocaleString();
+  el.className = change >= 0 ? "up" : "down";
+}
 
-  // Initial chart update
-  updateVIPChart();
+function updatePulse(data) {
+  const avg =
+    (data.bitcoin.usd_24h_change +
+     data.ethereum.usd_24h_change +
+     data.solana.usd_24h_change) / 3;
+
+  const pulse = document.getElementById("pulse");
+
+  if (avg > 2) {
+    pulse.textContent = "Positive momentum detected. Volatility is increasing.";
+  } else if (avg < -2) {
+    pulse.textContent = "Market pressure observed. Risk awareness advised.";
+  } else {
+    pulse.textContent = "Market conditions are stable. No abnormal signals.";
+  }
+}
+
+loadPrices();
+setInterval(loadPrices, 30000);
 </script>
+
 </body>
-                                                                                         </html>
+  </html>
