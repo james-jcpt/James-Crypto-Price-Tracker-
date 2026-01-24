@@ -168,6 +168,100 @@ function updatePulse(data) {
 loadPrices();
 setInterval(loadPrices, 30000);
 </script>
+<!-- ===== TRUST + LIVE FEEL UPGRADE ===== -->
 
+<style>
+  .price-flash {
+    animation: flash 0.6s ease;
+  }
+
+  @keyframes flash {
+    0% { background: rgba(255,255,255,0.15); }
+    100% { background: transparent; }
+  }
+
+  .arrow {
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  .trust-bar {
+    margin: 16px;
+    padding: 12px;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    background: #101010;
+    font-size: 13px;
+    opacity: 0.9;
+  }
+
+  .trust-bar strong {
+    color: #6ddcff;
+  }
+</style>
+
+<div class="trust-bar">
+  <strong>System Transparency</strong><br/>
+  Data is fetched directly from public market sources.  
+  Prices update automatically.  
+  No user funds. No trading. No manipulation.
+  <div id="last-updated" style="margin-top:6px;opacity:0.7;font-size:12px;">
+    Last update: --
+  </div>
+</div>
+
+<script>
+let lastPrices = {};
+
+function enhancedUpdate(id, price, change) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const prev = lastPrices[id];
+  lastPrices[id] = price;
+
+  let arrow = "";
+  if (prev !== undefined) {
+    if (price > prev) arrow = "↑";
+    if (price < prev) arrow = "↓";
+  }
+
+  el.textContent = "$" + price.toLocaleString() + " ";
+  const span = document.createElement("span");
+  span.textContent = arrow;
+  span.className = "arrow";
+  el.appendChild(span);
+
+  el.className = change >= 0 ? "up price-flash" : "down price-flash";
+
+  setTimeout(() => el.classList.remove("price-flash"), 600);
+}
+
+async function enhancedLoadPrices() {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true"
+    );
+    const data = await res.json();
+
+    enhancedUpdate("btc", data.bitcoin.usd, data.bitcoin.usd_24h_change);
+    enhancedUpdate("eth", data.ethereum.usd, data.ethereum.usd_24h_change);
+    enhancedUpdate("sol", data.solana.usd, data.solana.usd_24h_change);
+
+    document.getElementById("last-updated").textContent =
+      "Last update: " + new Date().toLocaleTimeString();
+
+  } catch (e) {
+    console.log("Live update error");
+  }
+}
+
+/* override old updater safely */
+clearInterval(window.priceInterval);
+enhancedLoadPrices();
+window.priceInterval = setInterval(enhancedLoadPrices, 30000);
+</script>
+
+<!-- ===== END TRUST UPGRADE ===== -->
 </body>
   </html>
