@@ -1,171 +1,131 @@
 <!-- Rebuild deployment --!><!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-meta name="google-site-verification" content="M_qFbfPqbSn_W2t-ryRzREGjHe3UCKquLeNDar1AWgs">
-  <title>James Crypto Intelligence</title>
-</head>  
-    body { font-family: Arial, sans-serif; background: #0a0a0a; color: #f0f0f0; padding: 16px; }
-    h1 { font-size: 22px; }
-    h2 { margin-top: 24px; font-size: 18px; }
-    .coin { margin: 6px 0; }
-    .arrow { font-size: 12px; margin-left: 4px; }
-    .price-flash { animation: flash 0.6s ease; }
-    @keyframes flash { 0% {background: rgba(255,255,255,0.15);} 100% {background: transparent;} }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    .trust-bar {
-      margin: 16px 0;
-      padding: 12px;
-      border: 1px solid #2a2a2a;
-      border-radius: 6px;
-      background: #101010;
-      font-size: 13px;
-      opacity: 0.9;
-    }
-    .trust-bar strong { color: #6ddcff; }
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="M_qFbfPqbSn_W2t-ryRzREGjHe3UCKquLeNDar1AWgs" />
 
-    .heartbeat {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #4caf50;
-      border-radius: 50%;
-      margin-left: 6px;
-      animation: beat 1.2s infinite;
+  <title>James Intelligence Platform</title>
+
+  <meta name="description" content="James Intelligence Platform provides real-time cryptocurrency prices and market intelligence." />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
     }
-    @keyframes beat { 0% {opacity:0.3;} 50% {opacity:1;} 100% {opacity:0.3;} }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #020617;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .coin {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #020617;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+    }
+
+    .coin-name {
+      font-weight: bold;
+    }
+
+    .price {
+      font-weight: bold;
+    }
+
+    .green {
+      color: #22c55e;
+    }
+
+    .red {
+      color: #ef4444;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
   </style>
 </head>
 
 <body>
+  <header>
+    <h1>James Intelligence Platform</h1>
+    <p>Real-time Crypto Prices & Intelligence</p>
+  </header>
 
-<h1>James Crypto Intelligence Platform</h1>
+  <main id="crypto-list">
+    Loading crypto data...
+  </main>
 
-<!-- ===== Live Market Overview ===== -->
-<h2>🌎 Live Market Overview</h2>
-<div class="coin">BTC: <span id="btc">$--</span></div>
-<div class="coin">ETH: <span id="eth">$--</span></div>
-<div class="coin">SOL: <span id="sol">$--</span></div>
+  <footer>
+    © 2026 James Intelligence Platform
+  </footer>
 
-<!-- ===== Market Pulse ===== -->
-<h2>📊 Market Pulse</h2>
-<div id="market-pulse">Analyzing market conditions…</div>
+  <script>
+    const apiUrl =
+      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false";
 
-<!-- ===== Intelligence Systems ===== -->
-<h2>🤖 Intelligence Systems</h2>
-<ul>
-  <li>Market Analysis Engine — <span style="color:#4caf50;">Active</span></li>
-  <li>Trend Detection System — <span style="color:#ffca28;">Learning</span></li>
-  <li>Risk Awareness Module — <span style="color:#4caf50;">Stable</span></li>
-  <li>Capability Expansion Unit — <span style="color:#2196f3;">Updating</span></li>
-</ul>
+    async function loadCrypto() {
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
 
-<!-- ===== Platform Notice ===== -->
-<h2>📈 Platform Notice</h2>
-<p>System usage is monitored to optimize performance, scalability, and future intelligence depth.</p>
+        const container = document.getElementById("crypto-list");
+        container.innerHTML = "";
 
-<!-- ===== Trust Bar ===== -->
-<div class="trust-bar">
-  <strong>System Transparency</strong><br/>
-  Data fetched directly from public market sources. Prices update automatically. No user funds. No trading. No manipulation.
-  <div id="last-updated" style="margin-top:6px;opacity:0.7;font-size:12px;">Last update: --</div>
-</div>
+        data.forEach(coin => {
+          const changeClass =
+            coin.price_change_percentage_24h >= 0 ? "green" : "red";
 
-<!-- ===== Free User Usage Tracker ===== -->
-<div class="trust-bar" style="margin-top:20px;">
-  <strong>Free User Data Usage</strong><br/>
-  <div id="usage-text">You have used 0 MB of 50 MB available.</div>
-</div>
+          const div = document.createElement("div");
+          div.className = "coin";
+          div.innerHTML = `
+            <div class="coin-name">
+              ${coin.name} (${coin.symbol.toUpperCase()})
+            </div>
+            <div class="price">
+              $${coin.current_price.toLocaleString()}
+              <span class="${changeClass}">
+                (${coin.price_change_percentage_24h.toFixed(2)}%)
+              </span>
+            </div>
+          `;
 
-<script>
-/* Heartbeat indicator */
-if(!document.querySelector('.heartbeat')){
-  const hb = document.createElement("span");
-  hb.className = "heartbeat";
-  document.querySelector("h1").appendChild(hb);
-}
+          container.appendChild(div);
+        });
+      } catch (err) {
+        document.getElementById("crypto-list").innerText =
+          "Failed to load crypto data.";
+      }
+    }
 
-/* Store last known prices */
-let lastPrices = { btc: 0, eth: 0, sol: 0 };
-
-/* Update individual coin */
-function enhancedUpdate(id, price) {
-  const el = document.getElementById(id);
-  if(!el) return;
-  const prev = lastPrices[id];
-  lastPrices[id] = price;
-
-  let arrow = "";
-  if(prev !== 0){
-    if(price > prev) arrow = "↑";
-    else if(price < prev) arrow = "↓";
-  }
-
-  el.textContent = "$" + price.toLocaleString() + " ";
-  const span = document.createElement("span");
-  span.textContent = arrow;
-  span.className = "arrow";
-  el.appendChild(span);
-
-  el.className = "price-flash";
-  setTimeout(() => el.classList.remove("price-flash"), 600);
-}
-
-/* Load prices from CoinGecko with fallback */
-async function enhancedLoadPrices() {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd"
-    );
-    const data = await res.json();
-
-    enhancedUpdate("btc", data.bitcoin?.usd || lastPrices.btc);
-    enhancedUpdate("eth", data.ethereum?.usd || lastPrices.eth);
-    enhancedUpdate("sol", data.solana?.usd || lastPrices.sol);
-
-    document.getElementById("last-updated").textContent =
-      "Last update: " + new Date().toLocaleTimeString();
-
-    const pulseEl = document.getElementById("market-pulse");
-    pulseEl.textContent = "Market stable. Prices updated successfully.";
-  } catch(e) {
-    console.log("Price fetch failed. Using last known prices.");
-    enhancedUpdate("btc", lastPrices.btc);
-    enhancedUpdate("eth", lastPrices.eth);
-    enhancedUpdate("sol", lastPrices.sol);
-    document.getElementById("market-pulse").textContent = "Market data temporarily unavailable.";
-  }
-}
-
-/* Clear old interval & start live updater */
-if(window.priceInterval) clearInterval(window.priceInterval);
-enhancedLoadPrices();
-window.priceInterval = setInterval(enhancedLoadPrices, 30000);
-
-/* ===== Free User Usage Simulation ===== */
-let usageMB = 0; // start at 0
-const usageLimit = 50; // free limit MB
-
-function simulateUsage() {
-  const increment = Math.floor(Math.random() * 3) + 1;
-  usageMB += increment;
-  if (usageMB > usageLimit) usageMB = usageLimit;
-
-  const usageText = document.getElementById("usage-text");
-  if(usageMB >= usageLimit){
-    usageText.textContent = `You have reached the free limit of ${usageLimit} MB. Upgrade for unlimited access.`;
-  } else {
-    usageText.textContent = `You have used ${usageMB} MB of ${usageLimit} MB available.`;
-  }
-}
-
-simulateUsage();
-setInterval(simulateUsage, 30000);
-</script>
-
-<footer style="margin-top:24px;font-size:12px;opacity:0.7;">
-  © 2026 James Intelligence Systems
-</footer>
-
+    loadCrypto();
+  </script>
 </body>
-  </html>
+</html>
