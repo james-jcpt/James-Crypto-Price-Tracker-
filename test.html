@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 8 Debug Test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Phase 8 Debug Test</h1>
+  <p>Testing charts, live crypto data, and styles...</p>
+
+  <!-- Top Movers test -->
+  <div id="top-movers-test" style="display:flex; gap:10px;"></div>
+
+  <!-- Crypto Table test -->
+  <table id="crypto-table-test" border="1">
+    <thead>
+      <tr>
+        <th>Coin</th>
+        <th>Price</th>
+        <th>24h %</th>
+        <th>Sparkline</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    async function debugTest() {
+      console.log("Debug test started...");
+      try {
+        const cryptoList = ["bitcoin","ethereum","tether"];
+        const res = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${cryptoList.join(",")}&sparkline=true`);
+        const data = await res.json();
+        console.log("Fetched data:", data);
+
+        // Top Movers debug
+        const moversDiv = document.getElementById("top-movers-test");
+        data.forEach(c => {
+          const div = document.createElement("div");
+          div.style.padding="10px";
+          div.style.border="1px solid #333";
+          div.innerHTML=`${c.name} - $${c.current_price.toLocaleString()} (${c.price_change_percentage_24h.toFixed(2)}%)`;
+          moversDiv.appendChild(div);
+        });
+
+        // Crypto Table debug
+        const tbody = document.querySelector("#crypto-table-test tbody");
+        data.forEach(c=>{
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${c.name}</td>
+            <td>$${c.current_price.toLocaleString()}</td>
+            <td>${c.price_change_percentage_24h.toFixed(2)}%</td>
+            <td><canvas id="spark-${c.id}" width="100" height="40"></canvas></td>
+          `;
+          tbody.appendChild(tr);
+
+          const ctx = document.getElementById(`spark-${c.id}`).getContext("2d");
+          new Chart(ctx,{
+            type:"line",
+            data:{
+              labels:["-6h","-5h","-4h","-3h","-2h","-1h","Now"],
+              datasets:[{
+                label:c.name,
+                data:c.sparkline_in_7d.price.slice(-7),
+                borderColor: c.price_change_percentage_24h>=0?"green":"red",
+                backgroundColor:"rgba(31,117,254,0.1)",
+                fill:true,
+                tension:0.3
+              }]
+            },
+            options:{plugins:{legend:{display:false}}, scales:{x:{display:false},y:{display:false}}}
+          });
+        });
+
+        alert("✅ Debug test complete! Check console for data.");
+      } catch(e){
+        console.error("Error during debug test:", e);
+        alert("❌ Debug test failed! See console.");
+      }
+    }
+
+    debugTest();
+  </script>
+</body>
+  </html>
