@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>James Crypto Intelligence</title>
+<meta name="google-site-verification" content="M_qFbfPqbSn_W2t-ryRzREGjHe3UCKquLeNDar1AWgs">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+  <h1>JCIPlatform</h1>
+  <span class="live">LIVE</span>
+  <button id="subscribeBtn">Upgrade to Premium $15/mo</button>
+</header>
 
+<section class="selector">
+  <button onclick="switchCoin('BTC')">BTC</button>
+  <button onclick="switchCoin('ETH')">ETH</button>
+  <button onclick="switchCoin('SOL')">SOL</button>
+  <button onclick="switchCoin('ADA')">ADA</button>
+</section>
+
+<section class="stats">
+  <div class="card">
+    <p>Price</p>
+    <h2 id="price">$0.00</h2>
+  </div>
+  <div class="card">
+    <p>24h Change</p>
+    <h2 class="green" id="change">+0%</h2>
+  </div>
+  <div class="card">
+    <p>Market Mood</p>
+    <h2 class="blue" id="mood">Neutral</h2>
+  </div>
+</section>
+
+<main class="chart-container">
+  <canvas id="marketChart"></canvas>
+</main>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="data.js"></script>
+<script type="module" src="chart.js"></script>
+<script type="module" src="premium.js"></script>
+<script type="module" src="ai-engine.js"></script>
+<script type="module" src="alerts.js"></script>
+<script type="module" src="portfolio.js"></script>
+<script type="module" src="social.js"></script>
+
+<script>
+document.getElementById("subscribeBtn").addEventListener("click", ()=>{
+  window.open("https://flutterwave.com/pay/auqlm2umyaq9","_blank");
+});
+</script>
+</body>
+  </html>
