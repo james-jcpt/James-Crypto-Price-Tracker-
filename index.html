@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JCIPlatform</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>JCIPlatform</h1>
+
+  <!-- User Authentication -->
+  <div id="auth-section">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="signup">Sign Up</button>
+    <button id="login">Login</button>
+    <p id="auth-status"></p>
+  </div>
+
+  <!-- Search -->
+  <input type="text" id="coin-search" placeholder="Search coin...">
+
+  <!-- Coin selection -->
+  <h2>Coins</h2>
+  <div id="coin-list"></div>
+
+  <!-- Watchlist -->
+  <h2>Watchlist</h2>
+  <div id="watchlist"></div>
+
+  <!-- Charts -->
+  <h2>Charts</h2>
+  <div class="charts">
+    <canvas id="chart-btc" height="120"></canvas>
+    <canvas id="chart-eth" height="120"></canvas>
+    <canvas id="chart-sol" height="120"></canvas>
+    <canvas id="chart-ada" height="120"></canvas>
+  </div>
+
+  <!-- VIP/Points -->
+  <h3>Status</h3>
+  <div id="vip-status"></div>
+
+  <!-- Leaderboard -->
+  <h3>Leaderboard</h3>
+  <div id="leaderboard"></div>
+
+  <!-- Live News -->
+  <h3>Live Crypto News</h3>
+  <div id="news"></div>
+
+  <!-- Premium upgrade -->
+  <button id="premium-btn">Upgrade to Premium ($15)</button>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    window.firebaseDB = db;
+    window.firebaseAuth = auth;
+
+    // Signup/Login
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const signupBtn = document.getElementById("signup");
+    const loginBtn = document.getElementById("login");
+    const authStatus = document.getElementById("auth-status");
+
+    signupBtn.addEventListener("click", async () => {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+        const user = userCredential.user;
+        authStatus.innerText = "Signed up successfully!";
+        // Initialize user data with 1-month free Premium
+        const expire = new Date(new Date().getTime() + 30*24*60*60*1000);
+        await setDoc(doc(db, "users", user.uid), { watchlist: [], points: 0, tier: "PREMIUM", premiumExpiry: expire });
+      } catch (e) { authStatus.innerText = e.message; }
+    });
+
+    loginBtn.addEventListener("click", async () => {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+        authStatus.innerText = "Logged in successfully!";
+        loadUserData(userCredential.user.uid);
+      } catch (e) { authStatus.innerText = e.message; }
+    });
+
+    window.currentUser = null;
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        window.currentUser = user;
+        loadUserData(user.uid);
+      }
+    });
+
+    async function loadUserData(uid) {
+      const docSnap = await getDoc(doc(db, "users", uid));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        localStorage.setItem("watchlist", JSON.stringify(data.watchlist));
+        localStorage.setItem("points", data.points);
+        localStorage.setItem("tier", data.tier);
+        localStorage.setItem("premiumExpiry", data.premiumExpiry);
+      }
+    }
+
+    async function saveUserData() {
+      if (!window.currentUser) return;
+      await setDoc(doc(db, "users", window.currentUser.uid), {
+        watchlist: JSON.parse(localStorage.getItem("watchlist")),
+        points: Number(localStorage.getItem("points")),
+        tier: localStorage.getItem("tier"),
+        premiumExpiry: localStorage.getItem("premiumExpiry")
+      }, { merge: true });
+    }
+
+    setInterval(saveUserData, 10000);
+  </script>
+
+  <!-- App Scripts -->
+  <script type="module" src="coins.js"></script>
+  <script type="module" src="coin-select.js"></script>
+  <script type="module" src="ai-engine.js"></script>
+  <script type="module" src="watchlist.js"></script>
+  <script type="module" src="charts.js"></script>
+  <script type="module" src="gamification.js"></script>
+  <script type="module" src="leaderboard.js"></script>
+  <script type="module" src="premium.js"></script>
+  <script type="module" src="news.js"></script>
+</body>
+  </html>
