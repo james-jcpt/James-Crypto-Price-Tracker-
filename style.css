@@ -28,3 +28,19 @@ select {
   margin-top: 10px;
   color: #58a6ff;
 }
+.news-item {
+  background: #1f1f1f;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.news-item a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.news-item a:hover {
+  text-decoration: underline;
+}
