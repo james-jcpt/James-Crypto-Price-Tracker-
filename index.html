@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JCI Platform</title>
+<style>
+body { font-family: Arial,sans-serif; background:#121212; color:#fff; margin:0; padding:0; }
+header { background:#1f1f1f; padding:15px 20px; text-align:center; font-size:28px; font-weight:bold; }
+#app { padding:20px; max-width:1000px; margin:auto; }
+select, button { padding:8px 12px; margin:5px; font-size:16px; border-radius:5px; border:none; cursor:pointer; }
+#coin-chart, #rsi-chart { width:100%; margin-bottom:20px; background:#222; }
+#coin-chart { height:400px; }
+#rsi-chart { height:100px; }
+h2 { margin-top:20px; }
+.news-item { margin:10px 0; padding:10px; background:#1f1f1f; border-radius:8px; }
+.news-item img { max-width:100%; border-radius:5px; margin-top:5px; }
+@media (max-width:600px){
+  header { font-size:24px; padding:10px; }
+  #coin-chart { height:300px; }
+  #rsi-chart { height:80px; }
+  select, button { font-size:14px; padding:6px 10px; }
+}
+</style>
+</head>
+<body>
+
+<header>JCI Platform</header>
+<div id="app">
+
+<select id="coin-select">
+  <option value="bitcoin">Bitcoin</option>
+  <option value="ethereum">Ethereum</option>
+  <option value="dogecoin">Dogecoin</option>
+</select>
+
+<div id="coin-chart">Loading chart...</div>
+<div id="rsi-chart">Loading RSI...</div>
+
+<h2>Crypto News</h2>
+<div id="news">Loading news...</div>
+
+<h2>Leaderboard</h2>
+<div id="leaderboard">Loading leaderboard...</div>
+
+<h2>Premium Subscription</h2>
+<button id="subscribe-btn">Subscribe</button>
+
+<h2>Login / Signup</h2>
+<button id="login-btn">Login</button>
+<button id="signup-btn">Signup</button>
+
+</div>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script type="module">
+window.addEventListener('DOMContentLoaded', async () => {
+
+// ---------------- Firebase ----------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.6.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMWmtgufykRj0ExqXQYsp6aGEsf7-EzxM",
+  authDomain: "jci-platform.firebaseapp.com",
+  projectId: "jci-platform",
+  storageBucket: "jci-platform.firebasestorage.app",
+  messagingSenderId: "455825874162",
+  appId: "1:455825874162:web:a667b64a5b2fc276e6846b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ---------------- Login / Signup ----------------
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = prompt("Email:");
+  const password = prompt("Password:");
+  try { await signInWithEmailAndPassword(auth, email, password); alert("Logged in!"); }
+  catch(e){ alert(e.message); }
+});
+
+document.getElementById('signup-btn').addEventListener('click', async () => {
+  const email = prompt("Email:");
+  const password = prompt("Password:");
+  try { 
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    await setDoc(doc(db,"users",userCred.user.uid),{ email, premium:false, premium_expiry:null });
+    alert("Account created!"); 
+  } catch(e){ alert(e.message); }
+});
+
+onAuthStateChanged(auth, user => { if(user) console.log("Logged in as:",user.email); });
+
+// ---------------- Chart ----------------
+const chartDiv = document.getElementById('coin-chart');
+const rsiDiv = document.getElementById('rsi-chart');
+let coin = 'bitcoin';
+
+let chart, priceSeries, ma7, ma25, ma99, rsiChart, rsiSeries;
+
+function createCharts() {
+  chart = LightweightCharts.createChart(chartDiv, {
+    width: chartDiv.clientWidth, height: chartDiv.clientHeight,
+    layout: { background:{color:'#121212'}, textColor:'#fff' },
+    grid: { vertLines:{color:'#333'}, horzLines:{color:'#333'} },
+    rightPriceScale:{ borderColor:'#555' }, timeScale:{ borderColor:'#555' }
+  });
+  priceSeries = chart.addLineSeries({ color:'#26a69a', lineWidth:2 });
+  ma7 = chart.addLineSeries({ color:'#FFA500', lineWidth:2 });
+  ma25 = chart.addLineSeries({ color:'#FF00FF', lineWidth:2 });
+  ma99 = chart.addLineSeries({ color:'#00FFFF', lineWidth:2 });
+
+  rsiChart = LightweightCharts.createChart(rsiDiv, {
+    width:rsiDiv.clientWidth, height:rsiDiv.clientHeight,
+    layout:{ background:{color:'#121212'}, textColor:'#fff' },
+    grid:{ vertLines:{color:'#333'}, horzLines:{color:'#333'} },
+    rightPriceScale:{ borderColor:'#555' }, timeScale:{ borderColor:'#555' }
+  });
+  rsiSeries = rsiChart.addLineSeries({ color:'#FF0000', lineWidth:2 });
+
+  // Placeholder
+  priceSeries.setData([{time:1,value:1}]);
+  ma7.setData([{time:1,value:1}]); ma25.setData([{time:1,value:1}]); ma99.setData([{time:1,value:1}]);
+  rsiSeries.setData([{time:1,value:50}]);
+}
+
+requestAnimationFrame(createCharts);
+
+// Resize charts on window resize
+window.addEventListener('resize', () => {
+  chart.applyOptions({ width: chartDiv.clientWidth, height: chartDiv.clientHeight });
+  rsiChart.applyOptions({ width: rsiDiv.clientWidth, height: rsiDiv.clientHeight });
+});
+
+document.getElementById('coin-select').addEventListener('change', e=>{ coin=e.target.value; fetchChart(); });
+
+async function fetchChart() {
+  try{
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=usd&days=7&interval=hourly`);
+    const data = await res.json();
+
+    if(!data || !data.prices || data.prices.length===0) {
+      console.log("No data from API, showing placeholder.");
+      priceSeries.setData([{time:1,value:1}]);
+      return;
+    }
+
+    const prices = data.prices.map(p => ({ time: Math.floor(p[0]/1000), value: p[1] }));
+    priceSeries.setData(prices);
+
+    const closes = prices.map(p=>p.value);
+    const ma = period => closes.map((v,i)=>i<period?v:closes.slice(i-period+1,i+1).reduce((a,b)=>a+b,0)/period);
+    ma7.setData(ma(7).map((v,i)=>({time:prices[i].time,value:v})));
+    ma25.setData(ma(25).map((v,i)=>({time:prices[i].time,value:v})));
+    ma99.setData(ma(99).map((v,i)=>({time:prices[i].time,value:v})));
+
+    const rsiData = closes.map((v,i)=>i===0?{time:prices[i].time,value:50}:{time:prices[i].time,value:50+(v-closes[i-1])*10});
+    rsiSeries.setData(rsiData);
+
+  } catch(e){
+    console.log("Fetch error:", e);
+    priceSeries.setData([{time:1,value:1}]);
+  }
+}
+
+fetchChart();
+setInterval(fetchChart,10000);
+
+// ---------------- News ----------------
+const newsDiv = document.getElementById('news');
+async function fetchNews(){
+  try{
+    const res = await fetch(`https://api.coingecko.com/api/v3/status_updates?category=general&per_page=5&page=1`);
+    const data = await res.json();
+    newsDiv.innerHTML = data.status_updates.map(n=>`<div class="news-item"><strong>${n.project?.name||'Crypto'}</strong><p>${n.description}</p></div>`).join('');
+  } catch(e){ newsDiv.innerHTML = "Failed to load news."; }
+}
+fetchNews(); setInterval(fetchNews,60000);
+
+// ---------------- Leaderboard ----------------
+const leaderboardDiv = document.getElementById('leaderboard');
+const users = [ {name:'Alice', points:120}, {name:'Bob', points:110}, {name:'Charlie', points:100} ];
+function updateLeaderboard(){ leaderboardDiv.innerHTML = users.sort((a,b)=>b.points-a.points).map(u=>`<p>${u.name}: ${u.points} pts</p>`).join(''); }
+updateLeaderboard();
+
+// ---------------- Flutterwave ----------------
+document.getElementById('subscribe-btn').addEventListener('click', async () => {
+  const user = auth.currentUser;
+  if(!user){ alert("Login first!"); return; }
+  const paymentUrl = `https://flutterwave.com/pay/auqlm2umyaq9?meta[userId]=${user.uid}&meta[plan]=monthly`;
+  window.open(paymentUrl,"_blank","width=600,height=800");
+  const userDoc = doc(db,"users",user.uid);
+  onSnapshot(userDoc, docSnap => { if(docSnap.exists() && docSnap.data().premium){ alert("🎉 Premium unlocked!"); } });
+});
+
+</script>
+</body>
+</html>
