@@ -100,33 +100,10 @@ async function loadChart(coinId) {
             titleColor: '#fff',
             bodyColor: '#fff',
             borderColor: '#9e00ff',
-            borderWidth: 1,
-            mode: 'index',
-            intersect: false
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: 'rgba(158,0,255,0.1)' },
-            ticks: { color: '#fff' }
-          },
-          y: {
-            grid: { color: 'rgba(158,0,255,0.1)' },
-            ticks: { color: '#fff' }
-          }
-        }
-      }
-    });
-
-  } catch (err) {
-    console.error("Error loading chart:", err);
-  }
-}
+            borderWidth:
 
 // Search functionality
-searchInput.addEventListener("keypress", async e => {
-  if (e.key === "Enter") {
-    const query = searchInput.value.toLowerCase();
+searchInput.addEventListener("keypconst query = searchInput.value.toLowerCase();
     try {
       const res = await fetch(`https://api.coingecko.com/api/v3/coins/${query}`);
       const coin = await res.json();
