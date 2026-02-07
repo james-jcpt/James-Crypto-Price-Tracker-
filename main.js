@@ -52,24 +52,74 @@ function displayTopCoins(coins) {
   });
 }
 
-// Load chart for selected coin
+// Load chart for selected coin (Premium Neon Version)
 async function loadChart(coinId) {
   try {
     const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7`);
     const data = await res.json();
-    const labels = data.prices.map(p => new Date(p[0]).toLocaleDateString());
+
+    const labels = data.prices.map(p => {
+      const date = new Date(p[0]);
+      return `${date.getMonth()+1}/${date.getDate()}`;
+    });
+
     const prices = data.prices.map(p => p[1]);
 
     if (coinChart) coinChart.destroy();
 
     coinChart = new Chart(coinChartCtx, {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Price (USD)', data: prices, borderColor: '#9e00ff', backgroundColor: 'rgba(158,0,255,0.2)', tension: 0.3 }] },
-      options: { responsive: true, plugins: { legend: { display: false } } }
+      data: {
+        labels,
+        datasets: [{
+          label: 'Price (USD)',
+          data: prices,
+          borderColor: '#9e00ff',          // neon purple line
+          backgroundColor: 'rgba(158,0,255,0.2)', // soft gradient fill
+          borderWidth: 3,
+          pointRadius: 3,
+          pointBackgroundColor: '#fff',
+          tension: 0.4,                    // smooth curve
+          fill: true,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          shadowBlur: 20,
+          shadowColor: '#9e00ff'
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart'
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#6a00f4',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: '#9e00ff',
+            borderWidth: 1,
+            mode: 'index',
+            intersect: false
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(158,0,255,0.1)' },
+            ticks: { color: '#fff' }
+          },
+          y: {
+            grid: { color: 'rgba(158,0,255,0.1)' },
+            ticks: { color: '#fff' }
+          }
+        }
+      }
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("Error loading chart:", err);
   }
 }
 
