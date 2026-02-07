@@ -90,3 +90,16 @@ header h1 {
   min-width: 150px;
   text-align: center;
 }
+canvas {
+  background: linear-gradient(180deg, #0a0a1a, #1a1a2a); /* dark futuristic background */
+  border-radius: 15px;
+  box-shadow: 0 0 20px #9e00ff;
+  padding: 10px;
+}
+
+.chartjs-tooltip {
+  background: #6a00f4 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 10px #9e00ff !important;
+  }
