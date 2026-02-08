@@ -32,30 +32,38 @@ async function loadTopCoins() {
   }
 }
 
-// ------------------------
-// Load TradingView Chart
-// ------------------------
 function loadChart(symbol = "BTCUSDT") {
-  // Remove previous widget
-  const container = document.getElementById("tradingview_chart");
-  container.innerHTML = "";
+  // -------- Loading TradingView Chart --------
+  const container = document.getElementById("tradingview_chart_wrapper");
 
-  tradingviewWidget = new TradingView.widget({
-    width: "100%",
-    height: 500,
-    symbol: `BINANCE:${symbol}`,
-    interval: "1",
-    timezone: "Africa/Lagos",
-    theme: "dark",
-    style: "1",
-    locale: "en",
-    toolbar_bg: "#111133",
-    enable_publishing: false,
-    hide_top_toolbar: false,
-    save_image: false,
-    container_id: "tradingview_chart",
-  });
-}
+  // Show loading message immediately
+  container.innerHTML = "<p style='text-align:center; color:white; padding:20px;'>Loading TradingView Chart...</p>";
+
+  // Try to load TradingView widget after a tiny delay
+  setTimeout(() => {
+    try {
+      new TradingView.widget({
+        width: "100%",
+        height: 500,
+        symbol: `BINANCE:${symbol}`,
+        interval: "1",
+        timezone: "Africa/Lagos",
+        theme: "dark",
+        style: 1,
+        locale: "en",
+        toolbar_bg: "#111133",
+        enable_publishing: false,
+        hide_top_toolbar: false,
+        save_image: false,
+        container_id: "tradingview_chart_wrapper",
+        autosize: true,
+      });
+    } catch (err) {
+      console.warn("TradingView load failed, retrying...");
+      setTimeout(() => loadChart(symbol), 2000); // retry automatically
+    }
+  }, 100); // almost instant
+  }
 
 // ------------------------
 // Search Function
