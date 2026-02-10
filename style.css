@@ -93,3 +93,23 @@ header input {
 .referral-btn:hover {
   background-color: #ffd700;
   }
+.app-header {
+  text-align: center;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 2.7rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.logo .con {
+  color: #f0b90b; /* Gold */
+}
+
+.logo .trix {
+  color: #00ffcc; /* Neon green */
+  text-shadow: 0 0 10px rgba(0,255,204,0.6);
+  }
