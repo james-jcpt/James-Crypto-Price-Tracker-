@@ -125,3 +125,68 @@ header input {
   color: #00ffcc; /* Neon green */
   text-shadow: 0 0 10px rgba(0,255,204,0.6);
   }
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  background: #0d1117;
+  border-bottom: 1px solid #1f2937;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo Section */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Logo Circle */
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+}
+
+/* Brand Name */
+.brand-name {
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #9ca3af;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: white;
+  }
