@@ -18,9 +18,11 @@ async function loadTopCoins() {
           ${coin.price_change_percentage_24h.toFixed(2)}%
         </p>
       `;
-      coinDiv.addEventListener("click", () => loadChart(coin.symbol.toUpperCase() + "USDT"));
-      topCoinsContainer.appendChild(coinDiv);
-    });
+      coinDiv.addEventListener("click", () => {
+  loadChart(coin.symbol);
+});
+
+topCoinsContainer.appendChild(coinDiv);
 
   } catch (err) {
     console.error("Top coins error:", err);
@@ -30,20 +32,42 @@ async function loadTopCoins() {
 // ---------------------
 // Load TradingView Chart
 // ---------------------
-function loadChart(symbol = "BTCUSDT") {
-  const container = document.getElementById("tradingview_chart_wrapper");
+function loadChart(symbol = "BTC") {
+  const container = document.getElementById("tradingview_chart_wrap");
 
-  // -------- Loading TradingView Chart --------
-  container.innerHTML = "<p style='text-align:center; color:white; padding:20px;'>Loading TradingView Chart...</p>";
+  // Clear old chart
+  container.innerHTML = "";
 
-  setTimeout(() => {
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const upperSymbol = symbol.toUpperCase();
+
+  const possibleSymbols = [
+    `CRYPTO:${upperSymbol}USD`,
+    `CRYPTO:${upperSymbol}USDT`,
+    `BINANCE:${upperSymbol}USDT`,
+    `COINBASE:${upperSymbol}USD`
+  ];
+
+  let index = 0;
+
+  function tryNextSymbol() {
+    if (index >= possibleSymbols.length) {
+      container.innerHTML =
+        "<p style='color:red;text-align:center;'>Chart not available for this coin.</p>";
+      return;
+    }
+
+    const currentSymbol = possibleSymbols[index];
+    index++;
+
     try {
       new TradingView.widget({
         width: "100%",
-        height: 700,
-        symbol: `BINANCE:${symbol}`,
+        height: window.innerWidth < 768 ? 400 : 700, // mobile responsive
+        symbol: currentSymbol,
         interval: "1",
-        timezone: "Africa/Lagos",
+        timezone: userTimezone, // auto detect real timezone
         theme: "dark",
         style: 1,
         locale: "en",
@@ -51,15 +75,17 @@ function loadChart(symbol = "BTCUSDT") {
         enable_publishing: false,
         hide_top_toolbar: false,
         save_image: false,
-        container_id: "tradingview_chart_wrapper",
+        container_id: "tradingview_chart_wrap",
         autosize: true,
       });
     } catch (err) {
-      console.warn("TradingView load failed, retrying...");
-      setTimeout(() => loadChart(symbol), 2000); // retry automatically
+      tryNextSymbol();
     }
-  }, 100);
+  }
+
+  tryNextSymbol();
 }
+
 
 // ---------------------
 // Initial Load
