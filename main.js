@@ -92,3 +92,6 @@ function loadChart(symbol = "BTC") {
 // ---------------------
 loadTopCoins();
 loadChart();
+window.addEventListener("DOMContentLoaded", () => {
+  loadChart("BTC");
+});
